@@ -59,6 +59,14 @@ python3 -m kb eval --model qwen2.5:3b --limit 20 --out results/ollama-fresh.json
 
 The model experiment compares title-aware retrieval and link-aware retrieval on the same 20 questions. Both receive at most six evidence sentences. The schema constrains citation IDs to the packet, and the validator requires the answer to cite two documents. A valid reference can still point to irrelevant evidence, so read the grounding examples in [EVAL.md](EVAL.md).
 
-Use a new output path for a fresh run. An interrupted run resumes from the same file when the model tag and evidence packets match. To rebuild the published summaries from saved model outputs without Ollama, run `./reproduce.sh`.
+With the model installed and Ollama running, rerun the offline benchmarks and the paired Ollama evaluation with one command.
+
+```sh
+./reproduce.sh --fresh-ollama
+```
+
+This creates a new run directory under `results/` with its own raw JSONL and rebuilt summary. A fresh model run takes about two minutes on the development Mac. The saved publication artifacts remain available for exact rescoring.
+
+Use a new output path for a standalone fresh run. An interrupted run resumes from the same file when the model tag and evidence packets match. To rebuild the published summaries from saved model outputs without Ollama, run `./reproduce.sh`.
 
 [DESIGN.md](DESIGN.md) covers architecture and tradeoffs. [WALKTHROUGH.md](WALKTHROUGH.md) is the live demo runbook.
