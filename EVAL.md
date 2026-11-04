@@ -34,7 +34,22 @@ The offline birth-order check takes all seven comparison rows in the evaluation 
 | Link ablation | 42.86% | **62.45%** | **71.43%** | **62.45%** | 2/7 |
 | Link-aware | 42.86% | 51.02% | 57.14% | 51.02% | 3/7 |
 
-For link-aware retrieval, all four emitted answers have birth-year premises visible in the exact cited sentences, and the year ordering supports the returned person. Three match the benchmark answer exactly. The Elswyth Thane response uses the article title while the benchmark expects her full name, Helen Elswyth Thane Ricker Beebe. This manual check covers the four emitted offline answers and says nothing about broader model generation. The localhost model run was declined and no model metrics are reported.
+For link-aware retrieval, all four emitted answers have birth-year premises visible in the exact cited sentences, and the year ordering supports the returned person. Three match the benchmark answer exactly. The Elswyth Thane response uses the article title while the benchmark expects her full name, Helen Elswyth Thane Ricker Beebe. This manual check covers the four emitted offline answers and says nothing about broader model generation.
+
+## Paired Ollama synthesis
+
+The first 16 bridge and first four comparison rows in the evaluation split form this 20-question exploratory run. The two methods use the same six-sentence cap, question order, prompt, model and generation settings. The run used Ollama 0.35.0 and Qwen2.5 3B Q4_K_M with manifest SHA-256 `357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b`, seed 42, temperature 0, a 4,096-token context, and a 512-token generation cap. The structured run took 1 minute 49 seconds on the development Mac. [Ollama model card](https://ollama.com/library/qwen2.5:3b)
+
+| Retrieval method | All facts in packet | Answer EM | Answer F1 | Citation F1 | Joint EM | Joint F1 | Invalid |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Title-aware BM25 | 40.00% | 25.00% | 32.50% | 40.83% | 10.00% | 24.76% | 6/20 |
+| Link-aware | 65.00% | 35.00% | 43.85% | 58.18% | 20.00% | 37.20% | 2/20 |
+
+The first run used JSON mode and a prompt requiring the answer to be repeated as a claim. All 40 responses failed validation, commonly because the model emitted `citation` in place of `citations` or omitted the answer claim. The structured run uses an explicit answer-citation field and constrains citation IDs to the packet. Both retrieval methods were rerun on the same questions. Since the output contract was revised after observing the first run on this cohort, treat the synthesis figures as exploratory. The original and structured outputs are preserved in `results/ollama.jsonl` and `results/ollama-structured.jsonl`. The original prompt is in commit `3394627`. The first attempt with the installed 22 GB Qwen3.6 model timed out before producing a response. Both scored runs use Qwen2.5 3B.
+
+In the Ben Ainslie case, both methods produce the right name. The baseline cites Bushell's tip list and an unrelated motorsport sentence. The link-aware method cites the tip list and Ainslie's article identifying him as an English competitive sailor. Only the link-aware answer earns joint exact match. In the Alexandra Park case (`5a84800f554299123d8c2276`), the two citations support the Cotton Famine date range, but the answer uses the expanded form `1861–1865` while the benchmark expects `1861–65`. Exact match counts it as wrong.
+
+Citation integrity is weaker than grounding. For `5ae537a855429960a22e0266`, the linked packet includes a UK release location and album recording history. The model answers “United Kingdom” when asked where the duo was from. Neither passage establishes the duo's origin, even though the response has valid citations from two distinct sources. This spot check establishes a concrete grounding failure. It does not estimate the overall rate of unsupported claims.
 
 ## Inspectable cases
 
@@ -43,4 +58,4 @@ For link-aware retrieval, all four emitted answers have birth-year premises visi
 - **Alias collision** (`5a751bbe5542993748c897ba`). The method selects the film article and its nearly identically titled short story instead of the gold film and Tom Courtenay articles. The short story excerpt also names Courtenay as a cast member, so the packet contains alternate support. This is a failure against the benchmark annotations.
 - **Answerer abstains with both facts present** (`5a7c66d555429935c91b518f`). The Havel article's lead contains adjacent birth and death date fragments without a usable separator. The parser declines to compare it with Fitzgerald's year.
 
-Raw outputs and rebuilt summaries are in [results/](results/). Run `./reproduce.sh` to regenerate both experiments and summaries offline. Run `python3 -m kb score results/birth-order.jsonl` to independently reparse and rescore the saved answer records.
+Raw outputs and rebuilt summaries are in [results/](results/). Run `./reproduce.sh` to regenerate the offline experiments and rescore the saved model outputs. Run `python3 -m kb score results/birth-order.jsonl` to independently reparse and rescore the saved answer records.

@@ -47,15 +47,18 @@ python3 -m kb prepare /path/to/hotpot_dev_distractor_v1.json
 
 The loader checks the input SHA-256 before selecting any rows. See [EVAL.md](EVAL.md) for the exact selection rule.
 
-## Experimental local model adapter
+## Run synthesis with Ollama
 
-With Ollama already running and a model already installed, pass its tag to the shared synthesis interface. The adapter requests structured claims and checks their citation IDs. The offline results in this repo do not use this adapter. Its local inference run was declined, so model quality, runtime, and compatibility with the installed tag remain unverified.
+Start Ollama, then pull the model used in the paired experiment. The model download is about 1.9 GB. Inference uses the local server and requires no API key.
 
 ```sh
-python3 -m kb ask 5ac250aa5542992f1f2b384d --model qwen3.6:latest
-python3 -m kb eval --model qwen3.6:latest --limit 20 --out results/model.jsonl
+ollama pull qwen2.5:3b
+python3 -m kb ask 5ac250aa5542992f1f2b384d --model qwen2.5:3b
+python3 -m kb eval --model qwen2.5:3b --limit 20 --out results/ollama-fresh.jsonl
 ```
 
-The model experiment compares title-aware retrieval and link-aware retrieval on the same subset. It stores model text and validation errors. Completed rows can be reused when the tag and evidence packet match. Runtime depends on local hardware and model size.
+The model experiment compares title-aware retrieval and link-aware retrieval on the same 20 questions. Both receive at most six evidence sentences. The schema constrains citation IDs to the packet, and the validator requires the answer to cite two documents. A valid reference can still point to irrelevant evidence, so read the grounding examples in [EVAL.md](EVAL.md).
+
+Use a new output path for a fresh run. An interrupted run resumes from the same file when the model tag and evidence packets match. To rebuild the published summaries from saved model outputs without Ollama, run `./reproduce.sh`.
 
 [DESIGN.md](DESIGN.md) covers architecture and tradeoffs. [WALKTHROUGH.md](WALKTHROUGH.md) is the live demo runbook.

@@ -1,0 +1,103 @@
+{
+  "metrics": {
+    "linked": {
+      "all": {
+        "n": 20,
+        "complete_docs": 0.75,
+        "complete_facts": 0.65,
+        "fact_recall": 0.8316666666666667,
+        "fact_f1": 0.515450937950938,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      },
+      "bridge": {
+        "n": 16,
+        "complete_docs": 0.75,
+        "complete_facts": 0.75,
+        "fact_recall": 0.8541666666666666,
+        "fact_f1": 0.5197420634920635,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      },
+      "comparison": {
+        "n": 4,
+        "complete_docs": 0.75,
+        "complete_facts": 0.25,
+        "fact_recall": 0.7416666666666667,
+        "fact_f1": 0.4982864357864358,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      }
+    },
+    "title_bm25": {
+      "all": {
+        "n": 20,
+        "complete_docs": 0.5,
+        "complete_facts": 0.4,
+        "fact_recall": 0.715,
+        "fact_f1": 0.4341017316017316,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      },
+      "bridge": {
+        "n": 16,
+        "complete_docs": 0.375,
+        "complete_facts": 0.375,
+        "fact_recall": 0.6770833333333334,
+        "fact_f1": 0.40243055555555557,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      },
+      "comparison": {
+        "n": 4,
+        "complete_docs": 1,
+        "complete_facts": 0.5,
+        "fact_recall": 0.8666666666666667,
+        "fact_f1": 0.5607864357864358,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "citation_f1": 0.0,
+        "joint_em": 0.0,
+        "joint_f1": 0,
+        "abstained": 1,
+        "invalid": 1
+      }
+    }
+  },
+  "paired_vs_linked": {
+    "title_bm25": {
+      "complete_facts_delta": 0.25,
+      "bootstrap_95": [
+        0.05,
+        0.5
+      ],
+      "wins": 6,
+      "losses": 1
+    }
+  }
+}

@@ -36,6 +36,18 @@ class KnowledgeBaseTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate(result, packet)
 
+    def test_structured_answer_citations_use_two_distinct_sources(self):
+        packet = [Sentence("First", 0, "First premise"),
+                  Sentence("Second", 0, "Second premise")]
+        raw = {"answer": "Result", "answer_citations": ["S1", "S2"], "claims": [
+            {"text": "First premise", "citations": ["S1"]},
+        ]}
+        self.assertEqual(validate(raw, packet)["claims"][0],
+                         {"text": "Result", "citations": ["S1", "S2"]})
+        raw["answer_citations"] = ["S1", "S1"]
+        with self.assertRaises(ValueError):
+            validate(raw, packet)
+
     def test_yes_no_and_abstention_scoring(self):
         self.assertEqual(answer_score("no", "yes"), (0, 0, 0, 0))
         values = score({"evidence": {}, "gold_facts": [["A", 0], ["B", 0]], "gold_answer": "x",
